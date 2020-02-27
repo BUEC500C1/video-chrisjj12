@@ -1,20 +1,33 @@
-auth = tweepy.OAuthHandler("consumer_key", "consumer_secret")
+import keys
+import tweepy
+import wget
+from PIL import Image
 
-# Redirect user to Twitter to authorize
-redirect_user(auth.get_authorization_url())
+auth = tweepy.OAuthHandler(keys.consumer_key, keys.consumer_secret)
+auth.set_access_token(keys.access_token, keys.access_secret)
 
-# Get access token
-auth.get_access_token("verifier_value")
-
-# Construct the API instance
 api = tweepy.API(auth)
 
-# Iterate through all of the authenticated user's friends
-for friend in tweepy.Cursor(api.friends).items():
-    # Process the friend here
-    process_friend(friend)
+#status = api.get_status(id="realmadrid", tweet_mode="extended")
+public_tweets = api.home_timeline()
+for tweet in public_tweets:
+    print(tweet.text)
+    
+media_files = set()
+for status in public_tweets:
+    media = status.entities.get('media', [])
+    if(len(media) > 0):
+        media_files.add(media[0]['media_url'])
+        
+i = 0
+for media_file in media_files:
+   temp = wget.download(media_file)
+   tmp_name = 'pic' + str(i) + '.png'
+   im1 = Image.open(temp)
+   im1.save(tmp_name)
+   i = i + 1
 
-# Iterate through the first 200 statuses in the home timeline
-for status in tweepy.Cursor(api.home_timeline).items(200):
-    # Process the status here
-    process_status(status)
+#convert text to image to make video pil
+   
+
+
