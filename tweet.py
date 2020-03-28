@@ -17,14 +17,18 @@ media_files = set()
 texts = []
 i = 0
 for status in public_tweets:
-    #print(status.text)
+    print(status.text)
     texts.append(status.text)
     media = status.entities.get('media', [])
+    #print(media)
     #texts.append(status.text)
     
     img = Image.new('RGB', (100, 30), color = (73, 109, 137))
     d = ImageDraw.Draw(img)
-    d.text((10,10), "hi", fill=(255,255,0))
+    #font = ImageFont.load("arial.pil")
+    font = ImageFont.truetype("arial.ttf", 15)
+    #if(len(status.text) > 0):
+    d.text((10,10), status.text, fill=(255,255,0), font = font)
      
     img.save('pil_text.png')
 
