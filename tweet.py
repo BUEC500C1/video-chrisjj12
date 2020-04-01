@@ -4,6 +4,7 @@ import wget
 from PIL import Image, ImageDraw, ImageFont
 import os
 import io
+import time
 
 auth = tweepy.OAuthHandler(keys.consumer_key, keys.consumer_secret)
 auth.set_access_token(keys.access_token, keys.access_secret)
@@ -15,42 +16,39 @@ public_tweets = api.home_timeline()
     
 media_files = set()
 texts = []
-i = 0
+j = 0
 for status in public_tweets:
     print(status.text)
     texts.append(status.text)
     media = status.entities.get('media', [])
-    #print(media)
-    #texts.append(status.text)
-    
-    img = Image.new('RGB', (100, 30), color = (73, 109, 137))
+
+
+    img = Image.new('RGB', (1000, 500), color = (73, 109, 137))
     d = ImageDraw.Draw(img)
-    #font = ImageFont.load("arial.pil")
     font = ImageFont.truetype("arial.ttf", 15)
-    #if(len(status.text) > 0):
     d.text((10,10), status.text, fill=(255,255,0), font = font)
-     
-    img.save('pil_text.png')
-
-
+    tmp_name2 = 'tweet' + str(j) + '.png'
+    #print(tmp_name2)
+    #img = Image.open(img)
+    img.save(tmp_name2)
+    j = j + 1
+    #print(j)
     
     if(len(media) > 0):
-        media_files.add(media[0]['media_url'])
+        temp = wget.download(media[0]['media_url'])
+        tmp_name = 'tweet' + str(j) + '.png'
+        #print(tmp_name)
+        im1 = Image.open(temp)
+        im1.save(tmp_name)
+        #media_files.add(media[0]['media_url'])
+        j = j + 1
         
 
-
-for media_file in media_files:
-   temp = wget.download(media_file)
-   tmp_name = 'pic' + str(i) + '.png'
-   im1 = Image.open(temp)
-   im1.save(tmp_name)
-   i = i + 1
-
+print(j)
+time.sleep(5)
 pid = os.getpid()
-os.system('ffmpeg -framerate 0.5 -i '+'pic'+'%d.png video'+str(pid)+'.avi')
+os.system('ffmpeg -framerate 0.5 -i '+'tweet'+'%d.png video'+str(pid)+'.avi')
 
-#ffmpeg -r 60 -f image2 -s 1920x1080 -i pic%d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p test.mp4
-#convert text to image to make video pil
    
 
 
