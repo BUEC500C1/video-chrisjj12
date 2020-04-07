@@ -41,5 +41,6 @@ def choose_username(username):
     #def make_video(username):
     pid = os.getpid()
     os.system('ffmpeg -framerate 0.5 -i '+'tweet'+'%d.png video'+str(pid)+'.avi')
+    return 0
 
 
