@@ -1,6 +1,6 @@
 import keys
 import tweepy
-import test_twitter
+import py_test
 import wget
 from PIL import Image, ImageDraw, ImageFont
 import os
