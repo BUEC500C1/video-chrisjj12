@@ -1,6 +1,6 @@
 import keys
 import tweepy
-import py_test
+import test_video
 import wget
 from PIL import Image, ImageDraw, ImageFont
 import os
